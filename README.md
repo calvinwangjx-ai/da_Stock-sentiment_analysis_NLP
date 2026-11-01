@@ -326,6 +326,17 @@ These results are experimental model-evaluation results and should not be interp
 | 10-day Trend  | Stacking Ensemble |    67.6% |    0.664 |   0.717 |
 | Market Regime | Voting Ensemble   |    70.3% |    0.681 |   0.841 |
 
+> **Reproduction:** these models are implemented in
+> [`07_model_training/classification_models/train_ensemble_models.py`](07_model_training/classification_models/).
+> On the committed integrated dataset (AAPL, GOOGL, TSLA; Oct 2024 – Oct 2025)
+> with walk-forward evaluation, the best model per target scores 52.8–57.7% on
+> the trend and Sharpe targets and 81.1% on 10-day-ahead regime, none clearly
+> above naive baselines (52.0–57.8%; 80.9% for regime persistence). Numbers in
+> the range above are only reached with shuffled K-fold splits, which leak
+> future data. See
+> [`traditional_ml_walk_forward.md`](16_reports_results/classification_reports/traditional_ml_walk_forward.md)
+> and [`traditional_ml_random.md`](16_reports_results/classification_reports/traditional_ml_random.md).
+
 ## Deep Learning
 
 | Model | Accuracy | F1-Score | AUC-ROC |

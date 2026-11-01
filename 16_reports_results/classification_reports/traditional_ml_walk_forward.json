@@ -1,0 +1,715 @@
+{
+  "meta": {
+    "generated": "2026-11-01 04:01",
+    "data": "14_data_storage/integrated_datasets/integrated_simple_20251202_213953.csv",
+    "rows": 750,
+    "tickers": [
+      "AAPL",
+      "GOOGL",
+      "TSLA"
+    ],
+    "date_range": [
+      "2024-10-04",
+      "2025-10-03"
+    ],
+    "n_features": 1795,
+    "pca": true,
+    "n_components": 35,
+    "split": "walk_forward",
+    "split_description": "walk-forward, 5 expanding-window folds over calendar dates with a gap equal to the label horizon; metrics pooled over all test folds",
+    "n_splits": 5,
+    "seed": 42,
+    "sharpe_threshold": 1.0
+  },
+  "results": {
+    "trend_3d": {
+      "horizon_days": 3,
+      "n_test": 615,
+      "test_positive_rate": 0.5479674796747968,
+      "folds": [
+        {
+          "fold": 1,
+          "train_rows": 117,
+          "test_rows": 123,
+          "train_period": [
+            "2024-10-04",
+            "2024-11-27"
+          ],
+          "test_period": [
+            "2024-12-04",
+            "2025-02-04"
+          ],
+          "test_positive_rate": 0.5284552845528455
+        },
+        {
+          "fold": 2,
+          "train_rows": 240,
+          "test_rows": 123,
+          "train_period": [
+            "2024-10-04",
+            "2025-01-30"
+          ],
+          "test_period": [
+            "2025-02-05",
+            "2025-04-03"
+          ],
+          "test_positive_rate": 0.34959349593495936
+        },
+        {
+          "fold": 3,
+          "train_rows": 363,
+          "test_rows": 123,
+          "train_period": [
+            "2024-10-04",
+            "2025-03-31"
+          ],
+          "test_period": [
+            "2025-04-04",
+            "2025-06-03"
+          ],
+          "test_positive_rate": 0.5853658536585366
+        },
+        {
+          "fold": 4,
+          "train_rows": 486,
+          "test_rows": 123,
+          "train_period": [
+            "2024-10-04",
+            "2025-05-29"
+          ],
+          "test_period": [
+            "2025-06-04",
+            "2025-08-01"
+          ],
+          "test_positive_rate": 0.5772357723577236
+        },
+        {
+          "fold": 5,
+          "train_rows": 609,
+          "test_rows": 123,
+          "train_period": [
+            "2024-10-04",
+            "2025-07-29"
+          ],
+          "test_period": [
+            "2025-08-04",
+            "2025-09-30"
+          ],
+          "test_positive_rate": 0.6991869918699187
+        }
+      ],
+      "baselines": {
+        "majority_of_train": {
+          "accuracy": 0.5479674796747968,
+          "f1_weighted": 0.3879517660722826
+        },
+        "always_up": {
+          "accuracy": 0.5479674796747968,
+          "f1_weighted": 0.3879517660722826
+        }
+      },
+      "models": {
+        "Logistic Regression": {
+          "accuracy": 0.5772357723577236,
+          "f1_weighted": 0.5762705779175782,
+          "roc_auc": 0.5878359626838588,
+          "fold_accuracy_mean": 0.5772357723577237,
+          "fold_accuracy_std": 0.07031462865183631,
+          "fold_roc_auc_mean": 0.5827438840679633
+        },
+        "Random Forest": {
+          "accuracy": 0.5577235772357724,
+          "f1_weighted": 0.5302812414808686,
+          "roc_auc": 0.5390559955596355,
+          "fold_accuracy_mean": 0.5577235772357725,
+          "fold_accuracy_std": 0.09545144794431983,
+          "fold_roc_auc_mean": 0.5380222925573805
+        },
+        "XGBoost": {
+          "accuracy": 0.551219512195122,
+          "f1_weighted": 0.5441401663131153,
+          "roc_auc": 0.559667399611468,
+          "fold_accuracy_mean": 0.551219512195122,
+          "fold_accuracy_std": 0.057119245756911546,
+          "fold_roc_auc_mean": 0.5469223167343712
+        },
+        "LightGBM": {
+          "accuracy": 0.5495934959349593,
+          "f1_weighted": 0.5426920811509242,
+          "roc_auc": 0.5459833913284803,
+          "fold_accuracy_mean": 0.5495934959349593,
+          "fold_accuracy_std": 0.07602386814673798,
+          "fold_roc_auc_mean": 0.5472985038182158
+        },
+        "Voting Ensemble": {
+          "accuracy": 0.5593495934959349,
+          "f1_weighted": 0.550928512768511,
+          "roc_auc": 0.5653459428303055,
+          "fold_accuracy_mean": 0.5593495934959349,
+          "fold_accuracy_std": 0.06572807457368368,
+          "fold_roc_auc_mean": 0.5614508126427072
+        },
+        "Stacking Ensemble": {
+          "accuracy": 0.49105691056910566,
+          "f1_weighted": 0.47079784531474134,
+          "roc_auc": 0.43914779155903766,
+          "fold_accuracy_mean": 0.4910569105691057,
+          "fold_accuracy_std": 0.08765419168743777,
+          "fold_roc_auc_mean": 0.5502178886241813
+        }
+      }
+    },
+    "trend_5d": {
+      "horizon_days": 5,
+      "n_test": 600,
+      "test_positive_rate": 0.5233333333333333,
+      "folds": [
+        {
+          "fold": 1,
+          "train_rows": 120,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2024-11-29"
+          ],
+          "test_period": [
+            "2024-12-09",
+            "2025-02-06"
+          ],
+          "test_positive_rate": 0.39166666666666666
+        },
+        {
+          "fold": 2,
+          "train_rows": 240,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-01-30"
+          ],
+          "test_period": [
+            "2025-02-07",
+            "2025-04-04"
+          ],
+          "test_positive_rate": 0.31666666666666665
+        },
+        {
+          "fold": 3,
+          "train_rows": 360,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-03-28"
+          ],
+          "test_period": [
+            "2025-04-07",
+            "2025-06-03"
+          ],
+          "test_positive_rate": 0.5833333333333334
+        },
+        {
+          "fold": 4,
+          "train_rows": 480,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-05-27"
+          ],
+          "test_period": [
+            "2025-06-04",
+            "2025-07-31"
+          ],
+          "test_positive_rate": 0.575
+        },
+        {
+          "fold": 5,
+          "train_rows": 600,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-07-24"
+          ],
+          "test_period": [
+            "2025-08-01",
+            "2025-09-26"
+          ],
+          "test_positive_rate": 0.75
+        }
+      ],
+      "baselines": {
+        "majority_of_train": {
+          "accuracy": 0.49,
+          "f1_weighted": 0.43905125882542717
+        },
+        "always_up": {
+          "accuracy": 0.5233333333333333,
+          "f1_weighted": 0.3595769511305616
+        }
+      },
+      "models": {
+        "Logistic Regression": {
+          "accuracy": 0.565,
+          "f1_weighted": 0.5647039180332879,
+          "roc_auc": 0.5748630350541178,
+          "fold_accuracy_mean": 0.565,
+          "fold_accuracy_std": 0.05461989869391313,
+          "fold_roc_auc_mean": 0.5268775808629402
+        },
+        "Random Forest": {
+          "accuracy": 0.5366666666666666,
+          "f1_weighted": 0.5315609353631936,
+          "roc_auc": 0.5322257360473922,
+          "fold_accuracy_mean": 0.5366666666666667,
+          "fold_accuracy_std": 0.08309967241545273,
+          "fold_roc_auc_mean": 0.5562918766643578
+        },
+        "XGBoost": {
+          "accuracy": 0.5283333333333333,
+          "f1_weighted": 0.5285575998895189,
+          "roc_auc": 0.5389069529196918,
+          "fold_accuracy_mean": 0.5283333333333334,
+          "fold_accuracy_std": 0.040345728123034025,
+          "fold_roc_auc_mean": 0.567615116883946
+        },
+        "LightGBM": {
+          "accuracy": 0.4866666666666667,
+          "f1_weighted": 0.4869405539993775,
+          "roc_auc": 0.5199991091710837,
+          "fold_accuracy_mean": 0.4866666666666667,
+          "fold_accuracy_std": 0.053903205429320755,
+          "fold_roc_auc_mean": 0.562888996790552
+        },
+        "Voting Ensemble": {
+          "accuracy": 0.5316666666666666,
+          "f1_weighted": 0.5318891750643895,
+          "roc_auc": 0.5434056389470402,
+          "fold_accuracy_mean": 0.5316666666666666,
+          "fold_accuracy_std": 0.029533408577782267,
+          "fold_roc_auc_mean": 0.5534678881865893
+        },
+        "Stacking Ensemble": {
+          "accuracy": 0.4083333333333333,
+          "f1_weighted": 0.4083777983750428,
+          "roc_auc": 0.40585608658857075,
+          "fold_accuracy_mean": 0.4083333333333333,
+          "fold_accuracy_std": 0.07071067811865475,
+          "fold_roc_auc_mean": 0.5564937390225263
+        }
+      }
+    },
+    "trend_10d": {
+      "horizon_days": 10,
+      "n_test": 600,
+      "test_positive_rate": 0.5783333333333334,
+      "folds": [
+        {
+          "fold": 1,
+          "train_rows": 90,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2024-11-14"
+          ],
+          "test_period": [
+            "2024-12-02",
+            "2025-01-30"
+          ],
+          "test_positive_rate": 0.5083333333333333
+        },
+        {
+          "fold": 2,
+          "train_rows": 210,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-01-15"
+          ],
+          "test_period": [
+            "2025-01-31",
+            "2025-03-28"
+          ],
+          "test_positive_rate": 0.25
+        },
+        {
+          "fold": 3,
+          "train_rows": 330,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-03-14"
+          ],
+          "test_period": [
+            "2025-03-31",
+            "2025-05-27"
+          ],
+          "test_positive_rate": 0.675
+        },
+        {
+          "fold": 4,
+          "train_rows": 450,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-05-12"
+          ],
+          "test_period": [
+            "2025-05-28",
+            "2025-07-24"
+          ],
+          "test_positive_rate": 0.6
+        },
+        {
+          "fold": 5,
+          "train_rows": 570,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-07-10"
+          ],
+          "test_period": [
+            "2025-07-25",
+            "2025-09-19"
+          ],
+          "test_positive_rate": 0.8583333333333333
+        }
+      ],
+      "baselines": {
+        "majority_of_train": {
+          "accuracy": 0.5783333333333334,
+          "f1_weighted": 0.42382611756423794
+        },
+        "always_up": {
+          "accuracy": 0.5783333333333334,
+          "f1_weighted": 0.42382611756423794
+        }
+      },
+      "models": {
+        "Logistic Regression": {
+          "accuracy": 0.5183333333333333,
+          "f1_weighted": 0.5199198109929817,
+          "roc_auc": 0.5514118759326128,
+          "fold_accuracy_mean": 0.5183333333333333,
+          "fold_accuracy_std": 0.09991663191547909,
+          "fold_roc_auc_mean": 0.5789723151344759
+        },
+        "Random Forest": {
+          "accuracy": 0.5066666666666667,
+          "f1_weighted": 0.4509317545502094,
+          "roc_auc": 0.4648312469387522,
+          "fold_accuracy_mean": 0.5066666666666666,
+          "fold_accuracy_std": 0.15324272685296794,
+          "fold_roc_auc_mean": 0.5551439235171005
+        },
+        "XGBoost": {
+          "accuracy": 0.515,
+          "f1_weighted": 0.5160517326908085,
+          "roc_auc": 0.5315465138795549,
+          "fold_accuracy_mean": 0.515,
+          "fold_accuracy_std": 0.14732805420406378,
+          "fold_roc_auc_mean": 0.5770425570038765
+        },
+        "LightGBM": {
+          "accuracy": 0.53,
+          "f1_weighted": 0.53,
+          "roc_auc": 0.5491109567039902,
+          "fold_accuracy_mean": 0.53,
+          "fold_accuracy_std": 0.16172679294277603,
+          "fold_roc_auc_mean": 0.5860599498450789
+        },
+        "Voting Ensemble": {
+          "accuracy": 0.515,
+          "f1_weighted": 0.5151283758976066,
+          "roc_auc": 0.5323894248840997,
+          "fold_accuracy_mean": 0.515,
+          "fold_accuracy_std": 0.14638230008364322,
+          "fold_roc_auc_mean": 0.5818238843657746
+        },
+        "Stacking Ensemble": {
+          "accuracy": 0.415,
+          "f1_weighted": 0.4186117873283565,
+          "roc_auc": 0.3874201227916301,
+          "fold_accuracy_mean": 0.41500000000000004,
+          "fold_accuracy_std": 0.15919938581679402,
+          "fold_roc_auc_mean": 0.575332979284775
+        }
+      }
+    },
+    "sharpe_signal_10d": {
+      "horizon_days": 10,
+      "n_test": 600,
+      "test_positive_rate": 0.52,
+      "folds": [
+        {
+          "fold": 1,
+          "train_rows": 90,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2024-11-14"
+          ],
+          "test_period": [
+            "2024-12-02",
+            "2025-01-30"
+          ],
+          "test_positive_rate": 0.4583333333333333
+        },
+        {
+          "fold": 2,
+          "train_rows": 210,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-01-15"
+          ],
+          "test_period": [
+            "2025-01-31",
+            "2025-03-28"
+          ],
+          "test_positive_rate": 0.21666666666666667
+        },
+        {
+          "fold": 3,
+          "train_rows": 330,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-03-14"
+          ],
+          "test_period": [
+            "2025-03-31",
+            "2025-05-27"
+          ],
+          "test_positive_rate": 0.5666666666666667
+        },
+        {
+          "fold": 4,
+          "train_rows": 450,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-05-12"
+          ],
+          "test_period": [
+            "2025-05-28",
+            "2025-07-24"
+          ],
+          "test_positive_rate": 0.55
+        },
+        {
+          "fold": 5,
+          "train_rows": 570,
+          "test_rows": 120,
+          "train_period": [
+            "2024-10-04",
+            "2025-07-10"
+          ],
+          "test_period": [
+            "2025-07-25",
+            "2025-09-19"
+          ],
+          "test_positive_rate": 0.8083333333333333
+        }
+      ],
+      "baselines": {
+        "majority_of_train": {
+          "accuracy": 0.35,
+          "f1_weighted": 0.343719806763285
+        },
+        "always_up": {
+          "accuracy": 0.52,
+          "f1_weighted": 0.35578947368421054
+        }
+      },
+      "models": {
+        "Logistic Regression": {
+          "accuracy": 0.5166666666666667,
+          "f1_weighted": 0.5036993340971742,
+          "roc_auc": 0.5363915598290598,
+          "fold_accuracy_mean": 0.5166666666666666,
+          "fold_accuracy_std": 0.12438738771363526,
+          "fold_roc_auc_mean": 0.5419806065402846
+        },
+        "Random Forest": {
+          "accuracy": 0.4683333333333333,
+          "f1_weighted": 0.4667269998406891,
+          "roc_auc": 0.47615073005698005,
+          "fold_accuracy_mean": 0.46833333333333327,
+          "fold_accuracy_std": 0.15114378731672845,
+          "fold_roc_auc_mean": 0.5715044241724898
+        },
+        "XGBoost": {
+          "accuracy": 0.5133333333333333,
+          "f1_weighted": 0.5115726196969866,
+          "roc_auc": 0.5409099002849003,
+          "fold_accuracy_mean": 0.5133333333333334,
+          "fold_accuracy_std": 0.12743189902410187,
+          "fold_roc_auc_mean": 0.5859453671389121
+        },
+        "LightGBM": {
+          "accuracy": 0.5283333333333333,
+          "f1_weighted": 0.5272618375648915,
+          "roc_auc": 0.555633457977208,
+          "fold_accuracy_mean": 0.5283333333333334,
+          "fold_accuracy_std": 0.10834615308763339,
+          "fold_roc_auc_mean": 0.5881264809388289
+        },
+        "Voting Ensemble": {
+          "accuracy": 0.5116666666666667,
+          "f1_weighted": 0.5083196505234616,
+          "roc_auc": 0.5403645833333334,
+          "fold_accuracy_mean": 0.5116666666666666,
+          "fold_accuracy_std": 0.12140382567649542,
+          "fold_roc_auc_mean": 0.5839291484254077
+        },
+        "Stacking Ensemble": {
+          "accuracy": 0.42,
+          "f1_weighted": 0.4087012987012987,
+          "roc_auc": 0.39989538817663817,
+          "fold_accuracy_mean": 0.42000000000000004,
+          "fold_accuracy_std": 0.17869900204906947,
+          "fold_roc_auc_mean": 0.5806871706775449
+        }
+      }
+    },
+    "market_regime_10d": {
+      "horizon_days": 10,
+      "n_test": 465,
+      "test_positive_rate": 0.546236559139785,
+      "folds": [
+        {
+          "fold": 1,
+          "train_rows": 78,
+          "test_rows": 93,
+          "train_period": [
+            "2024-12-13",
+            "2025-01-23"
+          ],
+          "test_period": [
+            "2025-02-07",
+            "2025-03-24"
+          ],
+          "test_positive_rate": 0.07526881720430108
+        },
+        {
+          "fold": 2,
+          "train_rows": 171,
+          "test_rows": 93,
+          "train_period": [
+            "2024-12-13",
+            "2025-03-10"
+          ],
+          "test_period": [
+            "2025-03-25",
+            "2025-05-07"
+          ],
+          "test_positive_rate": 0.16129032258064516
+        },
+        {
+          "fold": 3,
+          "train_rows": 264,
+          "test_rows": 93,
+          "train_period": [
+            "2024-12-13",
+            "2025-04-23"
+          ],
+          "test_period": [
+            "2025-05-08",
+            "2025-06-23"
+          ],
+          "test_positive_rate": 0.7526881720430108
+        },
+        {
+          "fold": 4,
+          "train_rows": 357,
+          "test_rows": 93,
+          "train_period": [
+            "2024-12-13",
+            "2025-06-06"
+          ],
+          "test_period": [
+            "2025-06-24",
+            "2025-08-06"
+          ],
+          "test_positive_rate": 0.7419354838709677
+        },
+        {
+          "fold": 5,
+          "train_rows": 450,
+          "test_rows": 93,
+          "train_period": [
+            "2024-12-13",
+            "2025-07-23"
+          ],
+          "test_period": [
+            "2025-08-07",
+            "2025-09-19"
+          ],
+          "test_positive_rate": 1.0
+        }
+      ],
+      "baselines": {
+        "majority_of_train": {
+          "accuracy": 0.2838709677419355,
+          "f1_weighted": 0.2166195979768888
+        },
+        "always_up": {
+          "accuracy": 0.546236559139785,
+          "f1_weighted": 0.38593626153409005
+        },
+        "persistence": {
+          "accuracy": 0.8086021505376344,
+          "f1_weighted": 0.8090120207359353
+        }
+      },
+      "models": {
+        "Logistic Regression": {
+          "accuracy": 0.810752688172043,
+          "f1_weighted": 0.8108250196265228,
+          "roc_auc": 0.8907713550024257,
+          "fold_accuracy_mean": 0.810752688172043,
+          "fold_accuracy_std": 0.09339376666928373,
+          "fold_roc_auc_mean": 0.7920517095251675
+        },
+        "Random Forest": {
+          "accuracy": 0.5655913978494623,
+          "f1_weighted": 0.5649941022744461,
+          "roc_auc": 0.5250774340411241,
+          "fold_accuracy_mean": 0.5655913978494624,
+          "fold_accuracy_std": 0.3200329500899142,
+          "fold_roc_auc_mean": 0.796704106897484
+        },
+        "XGBoost": {
+          "accuracy": 0.6258064516129033,
+          "f1_weighted": 0.6265969134688149,
+          "roc_auc": 0.6958801358361011,
+          "fold_accuracy_mean": 0.6258064516129032,
+          "fold_accuracy_std": 0.2323576051132143,
+          "fold_roc_auc_mean": 0.8088413945340134
+        },
+        "LightGBM": {
+          "accuracy": 0.6451612903225806,
+          "f1_weighted": 0.6451612903225806,
+          "roc_auc": 0.7234951673694816,
+          "fold_accuracy_mean": 0.6451612903225806,
+          "fold_accuracy_std": 0.19768576678333585,
+          "fold_roc_auc_mean": 0.7937516821174556
+        },
+        "Voting Ensemble": {
+          "accuracy": 0.6709677419354839,
+          "f1_weighted": 0.6712051466330592,
+          "roc_auc": 0.7668022539836548,
+          "fold_accuracy_mean": 0.6709677419354839,
+          "fold_accuracy_std": 0.2188482448724052,
+          "fold_roc_auc_mean": 0.8301727580923739
+        },
+        "Stacking Ensemble": {
+          "accuracy": 0.5698924731182796,
+          "f1_weighted": 0.5012140131807146,
+          "roc_auc": 0.781020263462328,
+          "fold_accuracy_mean": 0.5698924731182795,
+          "fold_accuracy_std": 0.28014828506635814,
+          "fold_roc_auc_mean": 0.7875287811839885
+        }
+      }
+    }
+  }
+}
