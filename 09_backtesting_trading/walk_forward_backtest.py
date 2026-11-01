@@ -23,11 +23,15 @@ How it works
    costs between tickers are ignored; position-change costs are not).
 6. Benchmarks over the identical window: buy & hold (same costs), and a
    rule-based MA20 > MA50 trend-following strategy with the same delay/costs.
-7. Luck test: each model's position series is circularly shifted against the
-   returns by every offset of at least 20 days. Shifting preserves exposure,
-   number of trades and holding periods but breaks timing; the p-value is
-   the share of shifted versions whose net Sharpe matches or beats the real
-   one. A model with genuine timing skill should have a small p-value.
+7. Placebo test (`--placebo-runs N`, the one to trust): every model is
+   retrained N times on randomly permuted labels and traded the same way;
+   the p-value is the share of those no-information strategies whose net
+   Sharpe matches or beats the real one.
+8. Shift test (always on, optimistic): each position series is circularly
+   shifted against the returns by every offset of at least 20 days, which
+   keeps exposure, trades and holding periods but randomises timing. On this
+   data, models trained on shuffled labels pass it (p < 0.05) about 20% of
+   the time, because sitting out one big sell-off dominates the window.
 
 Usage
 -----
@@ -240,29 +244,37 @@ def write_report(rows, meta, folds, out_dir, stem):
         f"executed {meta['delay']} close(s) after the signal",
         f"- Costs: {meta['cost_bps']} bps per unit turnover, one way",
         f"- Features: {'PCA(%d) fit per fold' % meta['n_components'] if meta['pca'] else 'scaled raw features'}",
+        *([f"- **PLACEBO RUN**: training labels randomly permuted (seed {meta['shuffle_labels']}); "
+           "model strategies carry no information"] if meta.get("shuffle_labels") is not None else []),
         "",
         f"![equity curves]({meta['plot']})",
         "",
         "| Strategy | Total return | Ann. return | Ann. vol | Sharpe | Max DD | Calmar "
-        "| Exposure | Trades | Trade win rate | Daily win rate | Luck-test p |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Exposure | Trades | Trade win rate | Daily win rate | Shift-test p | Placebo p |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for r in rows:
         p = r.get("luck_test", {}).get("p_value")
+        pp = r.get("placebo_test", {}).get("p_value")
         lines.append(
             f"| {r['strategy']} | {pct(r['total_return'])} | {pct(r['annual_return'])} "
             f"| {pct(r['annual_volatility'])} | {num(r['sharpe'])} | {pct(r['max_drawdown'])} "
             f"| {num(r['calmar'])} | {pct(r['exposure'])} | {r['n_trades']} "
-            f"| {pct(r['trade_win_rate'])} | {pct(r['daily_win_rate'])} | {num(p, 3)} |"
+            f"| {pct(r['trade_win_rate'])} | {pct(r['daily_win_rate'])} | {num(p, 3)} | {num(pp, 3)} |"
         )
     lines += [
         "",
         "## Reading this table",
         "",
-        "- **Luck-test p**: share of circularly shifted copies of the strategy (same",
-        "  exposure, trades and holding periods, but timing randomised) whose net Sharpe",
-        "  is at least as high. Values near 0 suggest real timing skill; values near or",
-        "  above 0.5 mean the timing is no better than chance.",
+        "- **Placebo p** (the test to trust; only with `--placebo-runs N`): each model is",
+        "  retrained N times on randomly permuted labels and traded identically. p is the",
+        "  share of those no-information strategies whose net Sharpe matches or beats the",
+        "  real one. A model with genuine skill should beat nearly all of them.",
+        "- **Shift-test p**: share of circularly shifted copies of the strategy (same",
+        "  exposure, trades and holding periods, timing randomised) whose net Sharpe is at",
+        "  least as high. It is **optimistic**: feature-driven positions that happen to",
+        "  sit out one large sell-off pass it easily. In placebo checks on this data,",
+        "  models trained on shuffled labels scored p < 0.05 about 20% of the time.",
         "- Compare every model with **Buy & Hold** and the rule-based **MA20 > MA50**",
         "  strategy. A model that only matches them adds nothing.",
         "- Picking the best of several models on one window is optimistic; three",
@@ -297,6 +309,12 @@ def main():
     ap.add_argument("--n-components", type=int, default=35)
     ap.add_argument("--no-pca", action="store_true")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--shuffle-labels", type=int, default=None, metavar="SEED",
+                    help="placebo: randomly permute the training labels with this seed; "
+                         "any 'edge' that remains comes from the setup, not the predictions")
+    ap.add_argument("--placebo-runs", type=int, default=0, metavar="N",
+                    help="also retrain each model N times on permuted labels and report "
+                         "where the real Sharpe falls in that distribution (slow: N full runs)")
     args = ap.parse_args()
 
     if not os.path.exists(args.data):
@@ -311,6 +329,10 @@ def main():
         label = label.where(regime_now.notna())
     order = df.sort_values(["Date", "ticker"], kind="stable").index
     dfo, label = df.loc[order].reset_index(drop=True), label.loc[order].reset_index(drop=True)
+    if args.shuffle_labels is not None:
+        known = label.notna().to_numpy()
+        rng = np.random.default_rng(args.shuffle_labels)
+        label[known] = rng.permutation(label[known].to_numpy())
 
     models = tem.build_models(not args.no_pca, args.n_components, args.seed)
     if args.models:
@@ -361,28 +383,59 @@ def main():
     rows.append(r)
     curves["MA20 > MA50 rule"] = net.mean(axis=1)
 
-    for m, p in probs.items():
+    def run_model(p):
         pos = signals_to_positions(p, args.threshold, args.mode)
         decided = pd.DataFrame({"Date": dfo["Date"], "ticker": dfo["ticker"], "pos": pos}) \
             .pivot(index="Date", columns="ticker", values="pos")
-        held, net = run(decided)
+        return run(decided)
+
+    model_rows = {}
+    for m, p in probs.items():
+        held, net = run_model(p)
         r = {"strategy": m, **performance(held, net)}
         r["luck_test"] = shift_test(held, returns.loc[window], cost, r["sharpe"])
         rows.append(r)
+        model_rows[m] = r
         curves[m] = net.mean(axis=1)
+
+    # Placebo test: retrain every model on randomly permuted labels and compare
+    # the real net Sharpe with the resulting distribution.
+    if args.placebo_runs > 0:
+        known = label.notna().to_numpy()
+        null = {m: [] for m in models}
+        for s in range(args.placebo_runs):
+            lab = label.copy()
+            lab[known] = np.random.default_rng(10_000 + s).permutation(lab[known].to_numpy())
+            pp, _ = oos_probabilities(dfo, feats, lab, horizon, models, args.n_splits)
+            for m in models:
+                held, net = run_model(pp[m])
+                null[m].append(sharpe(net.mean(axis=1)))
+            print(f"   placebo run {s + 1}/{args.placebo_runs} done")
+        for m, r in model_rows.items():
+            dist = np.array(null[m])
+            r["placebo_test"] = {
+                "p_value": float((np.sum(dist >= r["sharpe"]) + 1) / (len(dist) + 1)),
+                "n_runs": int(len(dist)),
+                "placebo_sharpe_median": float(np.median(dist)),
+                "placebo_sharpe_95th": float(np.percentile(dist, 95)),
+                "placebo_sharpes": [float(x) for x in dist],
+            }
 
     print(f"\nWindow {window[0].date()} → {window[-1].date()} ({len(window)} days), "
           f"costs {args.cost_bps} bps, delay {args.delay}\n")
     print(f"{'Strategy':22s} {'Total':>8s} {'Sharpe':>7s} {'MaxDD':>8s} {'Expo':>6s} "
-          f"{'Trades':>6s} {'TradeWin':>8s} {'p(luck)':>8s}")
+          f"{'Trades':>6s} {'TradeWin':>8s} {'p(shift)':>8s} {'p(placebo)':>10s}")
     for r in rows:
         p = r.get("luck_test", {}).get("p_value", float("nan"))
+        pp = r.get("placebo_test", {}).get("p_value", float("nan"))
         print(f"{r['strategy']:22s} {r['total_return']:8.1%} {r['sharpe']:7.2f} {r['max_drawdown']:8.1%} "
-              f"{r['exposure']:6.0%} {r['n_trades']:6d} {r['trade_win_rate']:8.1%} {p:8.3f}")
+              f"{r['exposure']:6.0%} {r['n_trades']:6d} {r['trade_win_rate']:8.1%} {p:8.3f} {pp:10.3f}")
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     stem = f"backtest_{args.target}_{args.mode}{'' if not args.no_pca else '_nopca'}"
+    if args.shuffle_labels is not None:
+        stem += f"_placebo{args.shuffle_labels}"
     png = out_dir / f"{stem}.png"
     plot(curves, png, f"Walk-forward backtest: {args.target} signals, equal-weight "
                       f"{'/'.join(close.columns)} ({args.cost_bps:g} bps costs)")
@@ -400,6 +453,7 @@ def main():
         "n_components": args.n_components,
         "n_splits": args.n_splits,
         "seed": args.seed,
+        "shuffle_labels": args.shuffle_labels,
         "plot": png.name,
     }
     md, js = write_report(rows, meta, folds, out_dir, stem)
