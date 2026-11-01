@@ -1,0 +1,259 @@
+{
+  "meta": {
+    "generated": "2026-11-01 12:30",
+    "target": "trend_5d",
+    "tickers": [
+      "AAPL",
+      "GOOGL",
+      "TSLA"
+    ],
+    "window": [
+      "2024-12-11",
+      "2025-10-03"
+    ],
+    "n_days": 203,
+    "mode": "long_flat",
+    "threshold": 0.5,
+    "delay": 1,
+    "cost_bps": 5.0,
+    "pca": true,
+    "n_components": 35,
+    "n_splits": 5,
+    "seed": 42,
+    "plot": "backtest_trend_5d_long_flat.png"
+  },
+  "folds": [
+    {
+      "train_period": [
+        "2024-10-04",
+        "2024-11-29"
+      ],
+      "test_period": [
+        "2024-12-09",
+        "2025-02-07"
+      ],
+      "train_rows": 120,
+      "test_rows": 123
+    },
+    {
+      "train_period": [
+        "2024-10-04",
+        "2025-01-31"
+      ],
+      "test_period": [
+        "2025-02-10",
+        "2025-04-08"
+      ],
+      "train_rows": 243,
+      "test_rows": 123
+    },
+    {
+      "train_period": [
+        "2024-10-04",
+        "2025-04-01"
+      ],
+      "test_period": [
+        "2025-04-09",
+        "2025-06-06"
+      ],
+      "train_rows": 366,
+      "test_rows": 123
+    },
+    {
+      "train_period": [
+        "2024-10-04",
+        "2025-05-30"
+      ],
+      "test_period": [
+        "2025-06-09",
+        "2025-08-06"
+      ],
+      "train_rows": 489,
+      "test_rows": 123
+    },
+    {
+      "train_period": [
+        "2024-10-04",
+        "2025-07-30"
+      ],
+      "test_period": [
+        "2025-08-07",
+        "2025-10-03"
+      ],
+      "train_rows": 612,
+      "test_rows": 123
+    }
+  ],
+  "strategies": [
+    {
+      "strategy": "Buy & Hold",
+      "total_return": 0.1810416243241293,
+      "annual_return": 0.22944336965252665,
+      "annual_volatility": 0.3860838660322502,
+      "sharpe": 0.7246700499012673,
+      "sortino": 1.1324644374582236,
+      "max_drawdown": -0.3753475823196899,
+      "calmar": 0.6112823965310794,
+      "exposure": 1.0,
+      "daily_win_rate": 0.5155993431855501,
+      "n_trades": 3,
+      "trade_win_rate": 1.0,
+      "avg_trade_return": 0.14821503289792046,
+      "turnover_per_year": 0.0
+    },
+    {
+      "strategy": "MA20 > MA50 rule",
+      "total_return": 0.1634767560044006,
+      "annual_return": 0.20678599753958227,
+      "annual_volatility": 0.2115275229867149,
+      "sharpe": 0.9940062396378473,
+      "sortino": 1.35916147080651,
+      "max_drawdown": -0.17496912753608174,
+      "calmar": 1.1818427653583592,
+      "exposure": 0.5845648604269293,
+      "daily_win_rate": 0.5140449438202247,
+      "n_trades": 9,
+      "trade_win_rate": 0.4444444444444444,
+      "avg_trade_return": 0.06673193023938498,
+      "turnover_per_year": 6.206896551724138,
+      "luck_test": {
+        "p_value": 0.18787878787878787,
+        "n_shifts": 164,
+        "null_sharpe_median": 0.2055141822737494,
+        "null_sharpe_95th": 2.7010776626650217
+      }
+    },
+    {
+      "strategy": "Logistic Regression",
+      "total_return": 0.4028036512682591,
+      "annual_return": 0.5222251568075968,
+      "annual_volatility": 0.2278066699615669,
+      "sharpe": 1.9593063536341182,
+      "sortino": 2.2811977680894917,
+      "max_drawdown": -0.12123558938453582,
+      "calmar": 4.307523553592829,
+      "exposure": 0.4187192118226601,
+      "daily_win_rate": 0.5529411764705883,
+      "n_trades": 69,
+      "trade_win_rate": 0.5942028985507246,
+      "avg_trade_return": 0.015541768477780353,
+      "turnover_per_year": 55.03448275862069,
+      "luck_test": {
+        "p_value": 0.024242424242424242,
+        "n_shifts": 164,
+        "null_sharpe_median": 0.24859262114681868,
+        "null_sharpe_95th": 1.4070821005691048
+      }
+    },
+    {
+      "strategy": "Random Forest",
+      "total_return": 0.14301970445179157,
+      "annual_return": 0.18050188114055166,
+      "annual_volatility": 0.29905911680611,
+      "sharpe": 0.6998975363822859,
+      "sortino": 0.9487283145484533,
+      "max_drawdown": -0.27524637465511237,
+      "calmar": 0.6557829557854234,
+      "exposure": 0.5599343185550082,
+      "daily_win_rate": 0.5131964809384164,
+      "n_trades": 73,
+      "trade_win_rate": 0.5616438356164384,
+      "avg_trade_return": 0.0068864445480843585,
+      "turnover_per_year": 58.3448275862069,
+      "luck_test": {
+        "p_value": 0.3939393939393939,
+        "n_shifts": 164,
+        "null_sharpe_median": 0.5316538834858306,
+        "null_sharpe_95th": 1.8119699197614645
+      }
+    },
+    {
+      "strategy": "XGBoost",
+      "total_return": 0.25425968075672345,
+      "annual_return": 0.32475680596274925,
+      "annual_volatility": 0.26641273403622306,
+      "sharpe": 1.1879502469376977,
+      "sortino": 1.4894704305768862,
+      "max_drawdown": -0.2391058645408729,
+      "calmar": 1.358213469947054,
+      "exposure": 0.5090311986863711,
+      "daily_win_rate": 0.5451612903225806,
+      "n_trades": 98,
+      "trade_win_rate": 0.5408163265306123,
+      "avg_trade_return": 0.008221399584360719,
+      "turnover_per_year": 79.44827586206897,
+      "luck_test": {
+        "p_value": 0.10909090909090909,
+        "n_shifts": 164,
+        "null_sharpe_median": 0.39679526516075864,
+        "null_sharpe_95th": 1.4845796745911586
+      }
+    },
+    {
+      "strategy": "LightGBM",
+      "total_return": 0.21080855227550233,
+      "annual_return": 0.26802606809042095,
+      "annual_volatility": 0.28765214338074474,
+      "sharpe": 0.965070757855114,
+      "sortino": 1.2631084304524283,
+      "max_drawdown": -0.24952275153854686,
+      "calmar": 1.074154827316481,
+      "exposure": 0.48111658456486045,
+      "daily_win_rate": 0.5255972696245734,
+      "n_trades": 83,
+      "trade_win_rate": 0.5060240963855421,
+      "avg_trade_return": 0.008231850570328257,
+      "turnover_per_year": 67.0344827586207,
+      "luck_test": {
+        "p_value": 0.24242424242424243,
+        "n_shifts": 164,
+        "null_sharpe_median": 0.4906634995492045,
+        "null_sharpe_95th": 1.6351067953210863
+      }
+    },
+    {
+      "strategy": "Voting Ensemble",
+      "total_return": 0.3423319137502683,
+      "annual_return": 0.4411946917522529,
+      "annual_volatility": 0.25170531759316095,
+      "sharpe": 1.5775024167726737,
+      "sortino": 1.876137605332716,
+      "max_drawdown": -0.21171677970921055,
+      "calmar": 2.0838909998452952,
+      "exposure": 0.4745484400656814,
+      "daily_win_rate": 0.5501730103806228,
+      "n_trades": 82,
+      "trade_win_rate": 0.524390243902439,
+      "avg_trade_return": 0.012126128020439164,
+      "turnover_per_year": 66.20689655172414,
+      "luck_test": {
+        "p_value": 0.048484848484848485,
+        "n_shifts": 164,
+        "null_sharpe_median": 0.4421485820300468,
+        "null_sharpe_95th": 1.489778026657302
+      }
+    },
+    {
+      "strategy": "Stacking Ensemble",
+      "total_return": -0.14073032352702308,
+      "annual_return": -0.17161980614753403,
+      "annual_volatility": 0.326194363239018,
+      "sharpe": -0.4175665144615503,
+      "sortino": -0.4799004758156935,
+      "max_drawdown": -0.3753475823196899,
+      "calmar": -0.4572290171336778,
+      "exposure": 0.49589490968801314,
+      "daily_win_rate": 0.48013245033112584,
+      "n_trades": 29,
+      "trade_win_rate": 0.5517241379310345,
+      "avg_trade_return": -0.011684633347122733,
+      "turnover_per_year": 22.344827586206897,
+      "luck_test": {
+        "p_value": 0.9757575757575757,
+        "n_shifts": 164,
+        "null_sharpe_median": 0.8072348417641778,
+        "null_sharpe_95th": 2.2351351419952024
+      }
+    }
+  ]
+}
