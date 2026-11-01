@@ -47,10 +47,15 @@ The framework computes:
 5. **Portfolio.** Equal weight across tickers, rebalanced daily.
 6. **Benchmarks** over the identical window: Buy & Hold (same costs) and an
    MA20 > MA50 trend-following rule (same delay and costs).
-7. **Luck test.** Each strategy's positions are circularly shifted against
-   the returns by every offset ≥ 20 days. This keeps exposure, number of
-   trades and holding periods but randomises timing. The p-value is the
-   share of shifted copies whose net Sharpe is at least as high.
+7. **Placebo test** (`--placebo-runs N`, the one to trust). Each model is
+   retrained N times on randomly permuted labels and traded identically;
+   the p-value is the share of those no-information strategies whose net
+   Sharpe matches or beats the real one.
+8. **Shift test** (always on, optimistic). Positions are circularly shifted
+   against returns by every offset ≥ 20 days, keeping exposure, trades and
+   holding periods but randomising timing. On this data, shuffled-label
+   models pass it (p < 0.05) about 20 % of the time, because sitting out one
+   big sell-off dominates the window, so do not rely on it alone.
 
 ### Usage
 
@@ -64,10 +69,49 @@ python 09_backtesting_trading/walk_forward_backtest.py
 python 09_backtesting_trading/walk_forward_backtest.py --target trend_3d --cost-bps 10 --delay 2
 ```
 
+```bash
+python 09_backtesting_trading/walk_forward_backtest.py --placebo-runs 19
+```
+
 Options: `--target {trend_3d,trend_5d,trend_10d,sharpe_signal_10d,market_regime_10d}`,
 `--models "Logistic Regression" LightGBM`, `--mode {long_flat,long_short}`,
-`--threshold 0.5`, `--cost-bps 5`, `--delay 1`, `--no-pca`, `--n-splits 5`.
-About one minute per run.
+`--threshold 0.5`, `--cost-bps 5`, `--delay 1`, `--no-pca`, `--n-splits 5`,
+`--placebo-runs N`, `--shuffle-labels SEED`. About one minute per run with
+all six models; `--placebo-runs N` costs N more runs. Run variants one at a
+time: the tree models use every core, and parallel runs thrash.
+
+### Results (AAPL, GOOGL, TSLA; 5 bps; 1-day delay)
+
+`trend_5d`, window 2024-12-11 → 2025-10-03, 19 placebo runs
+([report](../16_reports_results/backtests/backtest_trend_5d_long_flat.md)):
+
+| Strategy | Total return | Sharpe | Max DD | Trades | Placebo p |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Buy & Hold | 18.1 % | 0.72 | −37.5 % | 3 | — |
+| MA20 > MA50 rule | 16.3 % | 0.99 | −17.5 % | 9 | — |
+| Logistic Regression | 40.3 % | 1.96 | −12.1 % | 69 | 0.05 |
+| Voting Ensemble | 34.2 % | 1.58 | −21.2 % | 82 | 0.05 |
+| XGBoost | 25.4 % | 1.19 | −23.9 % | 98 | 0.10 |
+| LightGBM | 21.1 % | 0.97 | −25.0 % | 83 | 0.15 |
+| Random Forest | 14.3 % | 0.70 | −27.5 % | 73 | 0.55 |
+| Stacking Ensemble | −14.1 % | −0.42 | −37.5 % | 29 | 1.00 |
+
+`market_regime_10d`, window 2025-02-12 → 2025-10-03
+([report](../16_reports_results/backtests/backtest_market_regime_10d_long_flat.md)):
+models reach Sharpe 2.0–2.9 against 1.16 for Buy & Hold and 2.44 for the
+plain MA20 > MA50 rule, but placebo p is 0.10–0.35 for every model:
+shuffled-label models already average Sharpe 1.0–1.4 over this window.
+
+Robustness of the logistic-regression `trend_5d` strategy (Sharpe): 1.68
+with a 2-day delay, 1.59 at 20 bps costs, 1.94 on `trend_3d`, but 0.89 on
+`trend_10d`. XGBoost swings from 1.19 to 2.17 with the delay alone.
+
+**Interpretation.** Most of the edge comes from being flat through the
+Feb–Apr 2025 sell-off. In a separate set of 20 shuffled-label runs, 2
+logistic-regression placebos beat Sharpe 1.96, so across all 39 placebo
+runs p ≈ 0.075, before accounting for six models and several targets
+being tried. This is a lead worth re-testing on more tickers and years,
+not evidence of a tradable edge.
 
 ### Outputs
 

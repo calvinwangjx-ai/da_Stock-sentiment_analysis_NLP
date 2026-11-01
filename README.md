@@ -385,6 +385,23 @@ Historical Backtest
 Strategy vs Buy & Hold
 ```
 
+### Backtest on the real model predictions
+
+[`09_backtesting_trading/walk_forward_backtest.py`](09_backtesting_trading/)
+trades the walk-forward, out-of-sample predictions of the traditional ML
+models on actual AAPL/GOOGL/TSLA closes, with a one-day execution delay,
+5 bps costs, Buy & Hold and MA-crossover benchmarks, and a placebo test
+(models retrained on shuffled labels). On the 5-day trend target
+(Dec 2024 – Oct 2025) logistic regression returned 40.3 % (Sharpe 1.96,
+max drawdown −12.1 %) against 18.1 % (Sharpe 0.72, −37.5 %) for Buy & Hold.
+Most of that came from sitting out the Feb–Apr 2025 sell-off, and 2 of 39
+logistic-regression placebos trained on shuffled labels matched or beat it
+(p ≈ 0.075 before correcting for the six models and several targets
+tried), so it is not statistically convincing. See the
+[stage README](09_backtesting_trading/README.md) for all models, targets
+and robustness checks. (`backtesting_framework.py` is a demo on simulated
+prices with random signals and says nothing about the models.)
+
 ---
 
 # 🚀 Installation
