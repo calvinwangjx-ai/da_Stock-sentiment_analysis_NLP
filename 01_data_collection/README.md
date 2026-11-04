@@ -33,3 +33,19 @@ from the APIs).
 Stage boundary
 Input: none (source of truth).
 Output: raw CSVs ready for 02_data_processing/.
+
+## Price-only collector: `collect_prices.py`
+
+Downloads daily, split- and dividend-adjusted OHLCV from Yahoo Finance for
+the 30-stock universe in `12_config_utilities/config.py` plus `^GSPC`
+(S&P 500) and `^VIX`. Needs no API key, only HTTPS access to
+`query1.finance.yahoo.com`, `query2.finance.yahoo.com` and `fc.yahoo.com`.
+
+```bash
+python 01_data_collection/collect_prices.py --start 2015-01-01
+```
+
+Output: `14_data_storage/raw/yfinance_daily_<start>_<end>.csv` (long format:
+Date, ticker, Open, High, Low, Close, Volume; gitignored). Feed it to
+`03_feature_engineering/build_market_dataset.py`, or run everything with
+`bash 17_scripts_executables/run_price_pipeline.sh`.

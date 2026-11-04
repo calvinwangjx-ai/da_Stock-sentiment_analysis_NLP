@@ -103,7 +103,13 @@ def load_daily(path):
 
 
 def select_features(df):
+    """Explicit `f_` feature columns if the dataset declares them (see
+    03_feature_engineering/build_market_dataset.py); otherwise every numeric
+    column whose name does not look like a target."""
     num = df.select_dtypes(include=[np.number]).columns
+    explicit = [c for c in num if c.startswith("f_")]
+    if explicit:
+        return explicit
     return [c for c in num if not any(t in c.lower() for t in TARGET_LIKE)]
 
 
